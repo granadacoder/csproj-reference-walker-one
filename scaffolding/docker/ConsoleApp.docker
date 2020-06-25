@@ -1,0 +1,25 @@
+# See https://hub.docker.com/_/microsoft-dotnet-core-sdk/
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS buildImage
+WORKDIR /mybuilddir
+
+
+# Copy sln and csprojs and restore as distinct layers
+COPY ./src/Solutions/MyCompany.MyExamples.ProjectParser.sln ./src/Solutions/
+
+COPY ./src/BusinessLayer/*.csproj ./src/BusinessLayer/
+COPY ./src/ConsoleOne/*.csproj ./src/ConsoleOne/
+COPY ./src/Domain/*.csproj ./src/Domain/
+
+
+RUN dotnet restore ./src/Solutions/MyCompany.MyExamples.ProjectParser.sln
+
+COPY . .
+
+RUN dotnet publish "./src/Solutions/MyCompany.MyExamples.ProjectParser.sln" -c Release -o out
+
+# See https://hub.docker.com/_/microsoft-dotnet-core-runtime/
+FROM mcr.microsoft.com/dotnet/core/runtime:3.1 AS runtime
+WORKDIR /myrundir
+COPY --from=buildImage /mybuilddir/out ./
+
+ENTRYPOINT ["dotnet", "MyCompany.MyExamples.ProjectParser.ConsoleOne.dll"]

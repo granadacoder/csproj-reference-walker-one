@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "MyCompany.MyExamples.ProjectParser.ConsoleOne": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
