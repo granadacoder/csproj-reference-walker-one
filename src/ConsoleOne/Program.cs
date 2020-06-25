@@ -44,7 +44,10 @@ namespace MyCompany.MyExamples.ProjectParser.ConsoleOne
                 IConfigurationRoot configuration = builder.Build();
 
                 IServiceProvider servProv = BuildDi(configuration, lgr);
-                await RunParserDemo(servProv);
+
+                string dotnetFrameworkCsProjFullFileName = @"C:\MySubFolder\MyCsProj.csproj";
+
+                await RunParserDemo(servProv, dotnetFrameworkCsProjFullFileName);
             }
             catch (Exception ex)
             {
@@ -58,10 +61,10 @@ namespace MyCompany.MyExamples.ProjectParser.ConsoleOne
             return 0;
         }
 
-        private static async Task RunParserDemo(IServiceProvider servProv)
+        private static async Task RunParserDemo(IServiceProvider servProv, string dotnetFrameworkCsProjFullFileName)
         {
             ICsharpProjectParser demo = servProv.GetService<ICsharpProjectParser>();
-            var result = demo.Parse(@"C:\dev\PDEV\direct\brMaster\wrking\Source\Web.Console\web.console.csproj", 1);
+            var result = demo.Parse(dotnetFrameworkCsProjFullFileName, 1);
             string report = demo.ConvertCsParseResult(result, null, 1);
             Console.WriteLine(report);
 
